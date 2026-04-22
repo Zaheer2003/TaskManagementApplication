@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "y86Sb/LASLE=",
+  "success": true,
+  "projectFilePath": "D:\\TaskManagement\\TaskManagerApi\\TaskManagerApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mhdza\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.5\\microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",
+    "C:\\Users\\mhdza\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
