@@ -1,3 +1,8 @@
+"use client"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { onAuthStateChanged, User } from "firebase/auth"
+import { auth } from "@/lib/firebase"
 import { AppSidebar } from "@/components/app-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
@@ -8,6 +13,27 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import data from "./data.json"
 
 export default function Page() {
+
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (!currentUser) {
+        router.push("/login")
+      } else {
+        setUser(currentUser)
+      }
+      setLoading(false)
+    })
+    return () => unsubscribe()
+  }, [router])
+
+  if (loading) {
+    return <div>Loading...</div>
+  } 
+
   return (
     <SidebarProvider
       style={
