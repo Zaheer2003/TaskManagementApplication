@@ -25,6 +25,7 @@ const robotoMono = Roboto_Mono({
 export const metadata: Metadata = {
   title: "Task Management Application",
   description: "Manage and track all your tasks",
+  icons: { icon: "/task.svg" },
 };
 
 export default function RootLayout({

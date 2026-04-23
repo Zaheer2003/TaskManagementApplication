@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar"
 import { LayoutDashboardIcon, NotebookPen } from "lucide-react"
 import Image from "next/image"
+import { useTheme } from "next-themes"
 
 const data = {
   navMain: [
@@ -35,6 +36,10 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { theme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -45,7 +50,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <a href="/dashboard">
-                <Image src="/task.svg" alt="Task" width={24} height={24} className="size-6" />
+                <Image src={mounted && theme === "dark" ? "/task-light.svg" : "/task.svg"} alt="Task" width={24} height={24} className="size-6" />
                 <span className="text-lg font-bold">Task Management</span>
               </a>
             </SidebarMenuButton>
