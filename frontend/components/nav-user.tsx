@@ -104,8 +104,8 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <DropdownMenuItem onSelect={e => e.preventDefault()}>
-                  <LogOutIcon className="mr-2 h-4 w-4" />
+                <DropdownMenuItem onSelect={e => e.preventDefault()} className="text-red-500 focus:text-red-500 focus:bg-red-50 dark:focus:bg-red-950">
+                  <LogOutIcon className="mr-2 h-4 w-4 text-red-500" />
                   Log out
                 </DropdownMenuItem>
               </AlertDialogTrigger>

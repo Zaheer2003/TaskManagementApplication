@@ -79,7 +79,7 @@ export function LoginForm({
                   {loading ? "Logging in..." : "Login"}
                 </Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account? <a href="/signup" className="underline underline-offset-4 hover:text-primary">Sign up</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>

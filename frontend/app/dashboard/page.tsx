@@ -1,61 +1,75 @@
 "use client"
+
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { onAuthStateChanged, User } from "firebase/auth"
 import { auth } from "@/lib/firebase"
+
 import { AppSidebar } from "@/components/app-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import { DataTable } from "@/components/data-table"
 import { SectionCards } from "@/components/section-cards"
+import { RecentTasks } from "@/components/recent-tasks"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
-import data from "./data.json"
+type Task = {
+  id: number
+  title: string
+  description: string
+  isCompleted: boolean
+  firebaseUid: string
+}
 
 export default function Page() {
-
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [tasks, setTasks] = useState<Task[]>([])
+
   const router = useRouter()
-  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (!currentUser) {
-        router.push("/login")
-      } else {
-        setUser(currentUser)
-      }
+      if (!currentUser) router.push("/login")
+      else setUser(currentUser)
       setLoading(false)
     })
     return () => unsubscribe()
   }, [router])
 
-  if (loading) {
-    return <div>Loading...</div>
-  } 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5204/api"
+        const res = await fetch(`${apiUrl}/tasks?uid=${user!.uid}`)
+        const data = await res.json()
+        setTasks(data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    if (user) fetchData()
+  }, [user])
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-screen">Loading...</div>
+  )
 
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
-        } as React.CSSProperties
-      }
-    >
+    <SidebarProvider>
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <SectionCards />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
-              </div>
-              <DataTable data={data} />
-            </div>
+        <div className="flex flex-1 flex-col gap-6 p-4">
+
+          {/* KPI Cards */}
+          <SectionCards data={tasks} />
+
+          {/* Chart + Recent Tasks */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 lg:px-6">
+            <ChartAreaInteractive tasks={tasks} />
+            <RecentTasks tasks={tasks} />
           </div>
+
         </div>
       </SidebarInset>
     </SidebarProvider>

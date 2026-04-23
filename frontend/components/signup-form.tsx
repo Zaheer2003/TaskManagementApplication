@@ -3,6 +3,7 @@ import { useState } from "react"
 import { auth } from "@/lib/firebase"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,20 +28,24 @@ export function SignupForm({
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password !== confirmPassword) {
-      alert("Passwords do not match")
+      toast.error("Passwords do not match")
       return
     }
+    setLoading(true)
     try {
       await createUserWithEmailAndPassword(auth, email, password)
-      router.push("/login") // Redirect to login page after successful signup
-    } catch (error) {
-      console.error("Error creating user:", error)
-      alert("Failed to create account. Please try again.")
+      toast.success("Account created successfully!")
+      router.push("/login")
+    } catch (error: any) {
+      toast.error(error?.message ?? "Failed to create account. Please try again.")
+    } finally {
+      setLoading(false)
     }
   }
   return (
@@ -89,21 +94,17 @@ export function SignupForm({
                 </FieldDescription>
               </Field>
               <Field>
-                <Button type="submit">
-                  Create Account
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Creating..." : "Create Account"}
                 </Button>
                 <FieldDescription className="text-center">
-                  Already have an account? <a href="#">Sign in</a>
+                  Already have an account? <a href="/login" className="underline underline-offset-4 hover:text-primary">Sign in</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
           </form>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </FieldDescription>
     </div>
   )
 }

@@ -12,24 +12,23 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, CommandIcon, NotebookPen } from "lucide-react"
+import { LayoutDashboardIcon, NotebookPen } from "lucide-react"
+import Image from "next/image"
 
 const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: (
-        <LayoutDashboardIcon
-        />
+        <LayoutDashboardIcon className="size-6" />
       ),
     },
     {
       title: "Tasks",
-      url: "#",
+      url: "/task",
       icon: (
-        <NotebookPen
-        />
+        <NotebookPen className="size-6" />
       ),
     }
   ]
@@ -45,9 +44,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="#">
-                <CommandIcon className="size-5!" />
-                <span className="text-base font-semibold">Task Management Application</span>
+              <a href="/dashboard">
+                <Image src="/task.svg" alt="Task" width={24} height={24} className="size-6" />
+                <span className="text-lg font-bold">Task Management</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
